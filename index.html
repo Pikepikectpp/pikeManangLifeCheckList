@@ -1,0 +1,587 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #f5f0e8;
+    font-family: 'Jost', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .mountain-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .content {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 3rem 0 2rem;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    color: #2c3e2d;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: #4a6741;
+  }
+
+  .hero-sub {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #7a8c6e;
+    margin-top: 0.75rem;
+  }
+
+  .dog-strip {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.5rem 0 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .dog {
+    font-size: 2.2rem;
+    animation: dogwag 3s ease-in-out infinite;
+    cursor: default;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  }
+
+  .dog:nth-child(2) { animation-delay: 0.8s; }
+  .dog:nth-child(3) { animation-delay: 1.6s; }
+
+  @keyframes dogwag {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-6px) rotate(3deg); }
+  }
+
+  .quote-band {
+    background: #2c3e2d;
+    color: #d4c9a8;
+    text-align: center;
+    padding: 1.25rem 2rem;
+    border-radius: 2px;
+    margin-bottom: 2.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: 300;
+    letter-spacing: 0.03em;
+  }
+
+  .section {
+    margin-bottom: 2rem;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.7);
+    overflow: hidden;
+    box-shadow: 0 2px 20px rgba(44,62,45,0.06);
+    transition: transform 0.2s ease;
+  }
+
+  .section:hover {
+    transform: translateY(-2px);
+  }
+
+  .section-header {
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid rgba(44,62,45,0.08);
+  }
+
+  .section-icon {
+    font-size: 1.3rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #2c3e2d;
+    flex: 1;
+  }
+
+  .section-meta {
+    font-size: 0.7rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #7a8c6e;
+  }
+
+  .chevron {
+    font-size: 0.7rem;
+    color: #7a8c6e;
+    transition: transform 0.3s ease;
+  }
+
+  .section.open .chevron {
+    transform: rotate(180deg);
+  }
+
+  .items-list {
+    padding: 0.5rem 0;
+    display: none;
+  }
+
+  .section.open .items-list {
+    display: block;
+  }
+
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.6rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    border-bottom: 1px solid rgba(44,62,45,0.04);
+  }
+
+  .item:last-child { border-bottom: none; }
+
+  .item:hover {
+    background: rgba(74,103,65,0.05);
+  }
+
+  .checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid #9db08e;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background: transparent;
+  }
+
+  .item.checked .checkbox {
+    background: #4a6741;
+    border-color: #4a6741;
+  }
+
+  .checkmark {
+    display: none;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .item.checked .checkmark {
+    display: block;
+  }
+
+  .item-text {
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: #3d4f3a;
+    line-height: 1.5;
+    flex: 1;
+    letter-spacing: 0.01em;
+  }
+
+  .item.checked .item-text {
+    color: #9db08e;
+    text-decoration: line-through;
+    text-decoration-color: #b5c9a8;
+  }
+
+  .dont-item .checkbox {
+    border-color: #c9896e;
+  }
+
+  .dont-item.checked .checkbox {
+    background: #a0522d;
+    border-color: #a0522d;
+  }
+
+  .progress-section {
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.7);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 20px rgba(44,62,45,0.06);
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+  }
+
+  .progress-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: #4a6741;
+  }
+
+  .progress-count {
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: #7a8c6e;
+  }
+
+  .progress-bar-bg {
+    height: 4px;
+    background: rgba(44,62,45,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7a9e6e, #4a6741);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .mantra-line {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #9db08e;
+    padding: 0.5rem 0 0;
+    letter-spacing: 0.05em;
+  }
+
+  .snow-peaks {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.15;
+  }
+
+  .daily-question {
+    background: #2c3e2d;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .daily-question p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: #d4c9a8;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .daily-question .q-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #7a8c6e;
+    margin-bottom: 0.5rem;
+  }
+</style>
+</head>
+<body>
+
+<svg class="mountain-bg" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c8d8e8" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#f5f0e8" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="mist" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8ede4" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#f5f0e8" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1440" height="900" fill="url(#sky)"/>
+  <polygon points="0,600 180,200 360,450 540,100 720,380 900,150 1080,420 1260,80 1440,350 1440,900 0,900" fill="#d4dfc8" opacity="0.3"/>
+  <polygon points="0,700 200,350 400,550 600,200 800,480 1000,250 1200,500 1440,300 1440,900 0,900" fill="#c2d4b5" opacity="0.25"/>
+  <polygon points="0,900 300,500 500,700 700,400 900,650 1100,420 1300,600 1440,480 1440,900" fill="#afc5a0" opacity="0.2"/>
+  <rect x="0" y="0" width="1440" height="900" fill="url(#mist)"/>
+  <polygon points="490,105 530,60 570,105" fill="white" opacity="0.7"/>
+  <polygon points="890,155 940,95 990,155" fill="white" opacity="0.65"/>
+  <polygon points="1240,85 1280,35 1320,85" fill="white" opacity="0.6"/>
+  <polygon points="160,205 195,165 230,205" fill="white" opacity="0.55"/>
+</svg>
+
+<svg class="snow-peaks" viewBox="0 0 1440 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet">
+  <polygon points="0,200 200,40 400,200" fill="#2c3e2d"/>
+  <polygon points="300,200 500,20 700,200" fill="#3d4f3a"/>
+  <polygon points="600,200 800,60 1000,200" fill="#2c3e2d"/>
+  <polygon points="900,200 1100,30 1300,200" fill="#3d4f3a"/>
+  <polygon points="1200,200 1380,70 1440,120 1440,200" fill="#2c3e2d"/>
+</svg>
+
+<div class="content">
+  <div class="hero">
+    <div class="hero-sub">Your Manang Way · Dubai Life</div>
+    <h1 class="hero-title">Living <em>slowly</em>,<br>living truly</h1>
+  </div>
+
+  <div class="dog-strip">
+    <span class="dog" title="Himalayan mountain dog">🐕</span>
+    <span class="dog" title="Your trail companion">🐾</span>
+    <span class="dog" title="Manang friend">🐕‍🦺</span>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-label">
+      <span class="progress-text">Today's presence</span>
+      <span class="progress-count" id="progress-count">0 of 0 intentions held</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-bar"></div>
+    </div>
+    <div class="mantra-line" id="mantra">Begin. The mountains waited for you.</div>
+  </div>
+
+  <div class="quote-band">
+    "Am I living today — or just moving through it?"
+  </div>
+
+  <div id="sections-container"></div>
+
+  <div class="daily-question">
+    <div class="q-label">Daily reflection</div>
+    <p>One moment today that felt genuinely real — hold it before you sleep.</p>
+  </div>
+</div>
+
+<script>
+const sections = [
+  {
+    id: "morning",
+    icon: "🌄",
+    color: "#e8f4e0",
+    title: "Morning — your village hour",
+    time: "5:30 → 8:10",
+    items: [
+      "Wake at 5:30. Don't negotiate with yourself",
+      "Phone stays face down the first hour — non negotiable",
+      "Pray and meditate first, before anything touches you (20–25 min)",
+      "One word, one language — slowly, deeply, not as study but as gift",
+      "Write what's in your head before the world fills it (15 min)",
+      "Read one Substack piece — slowly, argue with it quietly",
+      "Eat breakfast sitting down, tasting it, no screen",
+      "Leave with ten minutes to spare. Rushing is always a choice"
+    ]
+  },
+  {
+    id: "carry",
+    icon: "🏔️",
+    color: "#e4ecda",
+    title: "How you carry yourself",
+    time: "All day",
+    items: [
+      "Walk slower than you need to",
+      "Speak less than you want to",
+      "When someone talks — actually listen, don't prepare your reply",
+      "Three slow breaths before any meeting or difficult moment",
+      "Eat lunch away from your screen at least four days a week",
+      "When you feel blood rising — pause. That feeling is information, not instruction",
+      "Do one thing at a time as much as humanly possible"
+    ]
+  },
+  {
+    id: "people",
+    icon: "🫂",
+    color: "#ede4d8",
+    title: "People — real faces only",
+    time: "Always",
+    items: [
+      "Invest deeply in your one or two real faces",
+      "Stop explaining your choices to people who didn't ask sincerely",
+      "Let other people's performance pass through you without absorbing it",
+      "Don't gossip — not even the soft comfortable kind",
+      "If someone consistently drains you, quietly reduce the dose",
+      "Be the same person in every room — same tone, same face"
+    ]
+  },
+  {
+    id: "consume",
+    icon: "📖",
+    color: "#e0e8d4",
+    title: "What you let in",
+    time: "Mindful",
+    items: [
+      "Substack and books over news and social media",
+      "One language practice daily — even ten minutes",
+      "One piece of music listened to fully, not as background",
+      "Curate who you follow — if it spikes anxiety in you, remove it",
+      "Read physical pages — a few at least, every day"
+    ]
+  },
+  {
+    id: "evening",
+    icon: "🌙",
+    color: "#dde4d8",
+    title: "Evening — landing softly",
+    time: "After work",
+    items: [
+      "Decide a wind-down time and honor it",
+      "No heavy decisions or hard conversations after 9pm",
+      "Phone away thirty minutes before sleep",
+      "Reflect on one moment from the day that felt genuinely real",
+      "Sleep before midnight — your 5:30 depends on it"
+    ]
+  },
+  {
+    id: "weekly",
+    icon: "🏞️",
+    color: "#e4ede0",
+    title: "Weekly rituals",
+    time: "Each week",
+    items: [
+      "One morning in the desert or somewhere with real silence",
+      "One meal cooked slowly, eaten with full attention",
+      "One long walk — no destination, no podcast",
+      "One honest check-in: am I performing this week or living?"
+    ]
+  },
+  {
+    id: "donts",
+    icon: "🚫",
+    color: "#f0e8e0",
+    title: "The don'ts — hold these gently",
+    time: "Protect",
+    items: [
+      "Don't measure your life against Dubai's version of success",
+      "Don't attend every gathering out of obligation",
+      "Don't rush through small beautiful moments to reach important big ones",
+      "Don't let a bad hour poison the whole day",
+      "Don't say yes to things that require a second face",
+      "Don't consume before you create in the morning",
+      "Don't confuse being busy with being alive"
+    ],
+    isDont: true
+  }
+];
+
+const mantras = [
+  "Begin. The mountains waited for you.",
+  "You are returning to yourself.",
+  "Slow is not lazy — slow is present.",
+  "Manang is not a place. It lives in you.",
+  "The river doesn't rush. Neither must you.",
+  "One breath. One moment. Enough.",
+  "You have nothing to prove today.",
+  "The dogs are calm. The peaks are still. So are you."
+];
+
+let totalItems = 0;
+let checkedItems = 0;
+
+function updateProgress() {
+  const pct = totalItems > 0 ? (checkedItems / totalItems) * 100 : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-count').textContent = checkedItems + ' of ' + totalItems + ' intentions held';
+  const idx = Math.floor((pct / 100) * (mantras.length - 1));
+  document.getElementById('mantra').textContent = mantras[Math.min(idx, mantras.length - 1)];
+}
+
+const container = document.getElementById('sections-container');
+
+sections.forEach(sec => {
+  totalItems += sec.items.length;
+
+  const div = document.createElement('div');
+  div.className = 'section';
+  div.id = 'sec-' + sec.id;
+
+  const header = document.createElement('div');
+  header.className = 'section-header';
+  header.style.background = sec.color + '88';
+  header.innerHTML = `
+    <div class="section-icon" style="background:${sec.color}">${sec.icon}</div>
+    <div class="section-title">${sec.title}</div>
+    <span class="section-meta">${sec.time}</span>
+    <span class="chevron">▼</span>
+  `;
+
+  header.addEventListener('click', () => {
+    div.classList.toggle('open');
+  });
+
+  const list = document.createElement('div');
+  list.className = 'items-list';
+
+  sec.items.forEach((text, i) => {
+    const item = document.createElement('div');
+    item.className = 'item' + (sec.isDont ? ' dont-item' : '');
+
+    item.innerHTML = `
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <span class="item-text">${text}</span>
+    `;
+
+    item.addEventListener('click', () => {
+      const wasChecked = item.classList.contains('checked');
+      item.classList.toggle('checked');
+      checkedItems += wasChecked ? -1 : 1;
+      updateProgress();
+    });
+
+    list.appendChild(item);
+  });
+
+  div.appendChild(header);
+  div.appendChild(list);
+  container.appendChild(div);
+});
+
+document.getElementById('sec-morning').classList.add('open');
+
+updateProgress();
+</script>
+</body>
+</html>
